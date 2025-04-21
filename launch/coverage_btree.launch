@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find multirobot_tb3_setup)/launch/bringup.launch" />
+  <node pkg="coverage_application" type="run_btree.py" name="coverage_tree" output="screen" />
+</launch>
