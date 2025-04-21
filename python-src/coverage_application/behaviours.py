@@ -22,7 +22,7 @@ class MoveToNextPoseClient(py_trees_ros.actions.ActionClient):
         
         if self.blackboard.get_next_pose_and_index() is None:
             rospy.loginfo(f"[{self.name}] No more poses to cover")
-            return py_trees.common.Status.SUCCESS
+            return py_trees.common.Status.FAILURE
         pose, self.pose_index = self.blackboard.get_next_pose_and_index()
         self.blackboard.visiting_poses_index.append(self.pose_index)
 

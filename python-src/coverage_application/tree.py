@@ -39,22 +39,8 @@ class CoverageTree(py_trees_ros.trees.BehaviourTree):
             ]
         )
 
-        has_battery_selector = py_trees.composites.Selector(
-            "HasBatterySelector",
-            children=[
-                has_battery,
-                move_to_fill_battery,
-            ]
-        )
-
-        robot_has_battery_sequence = py_trees.composites.Sequence(
-            f"Robot{robot_id}Sequence",
-            children=[
-                has_battery_selector,
-                coverage_explore,
-            ]
-        )
         
+
         has_poses_to_cover = py_trees.composites.Selector(
             "HasPosesToCoverSelector",
             children=[
@@ -63,16 +49,33 @@ class CoverageTree(py_trees_ros.trees.BehaviourTree):
             ]
         )  
 
-        
-        robot_has_battery_and_poses_sequence = py_trees.composites.Sequence(
-            f"Robot{robot_id}AndPosesSequence",
+        robot_has_poses_covered = py_trees.composites.Sequence(
+            "RobotHasPosesCoveredSelector",
             children=[
                 has_poses_to_cover,
-                robot_has_battery_sequence,
+                coverage_explore
             ]
         )
 
-        return robot_has_battery_and_poses_sequence
+        has_battery_selector = py_trees.composites.Selector(
+            "HasBatterySelector",
+            children=[
+                has_battery,
+                move_to_fill_battery,
+            ]
+        )
+
+        robot_has_battery_and_poses_to_cover = py_trees.composites.Sequence(
+            f"Robot{robot_id}Sequence",
+            children=[
+                has_battery_selector,
+                robot_has_poses_covered,
+            ]
+        )
+        
+        
+       
+        return robot_has_battery_and_poses_to_cover
 
 
     def create_tree_root(self):
